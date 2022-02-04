@@ -2,7 +2,7 @@ import tkinter as tk
 
 
 nLine = 0
-l = []
+cliclist = []
 compte = 0
 historique = []
 check = True
@@ -11,51 +11,57 @@ canvasHeigth = 500
 canvasWidth = 500
 
 
-def timeoutMan(event):
+def timeoutMan():
     global check
     if check is True:
         check = False
-        canvas.itemconfigure(button, text="recommencer")
+        button['text'] = "Recommencer"
     else:
         check = True
+        button['text'] = "Pause"
     return
 
 
 def createline(event):
-    global l, nLine, historique
-    x1 = l[0][0]
-    x2 = l[1][0]
-    y1 = l[0][1]
-    y2 = l[1][1]
-    if nLine < 2:
-        line = canvas.create_line(x1, y1, x2, y2, fill="blue")
-        nLine += 1
-        historique.append(line)
+    global cliclist, nLine, historique
+    x1 = cliclist[0][0]
+    x2 = cliclist[1][0]
+    y1 = cliclist[0][1]
+    y2 = cliclist[1][1]
+    color = "blue"
+    if (nLine % 2) != 0:
+        color = "red"
+    line = canvas.create_line(x1, y1, x2, y2, fill=color)
+    nLine += 1
+    historique.append(line)
     return
 
+
 def lancementLigne(event):
-    global l, check
+    global cliclist, check
+    if check is False:
+        return
     compteClic(event)
     if check is not False:
         x = event.x
         y = event.y
-        if len(l) >= 2:
-            l = []
-        l.append((x, y))
-        if len(l) == 2:
+        if len(cliclist) >= 2:
+            cliclist = []
+        cliclist.append((x, y))
+        if len(cliclist) == 2:
             createline(event)
+
 
 def compteClic(event):
     global compte, historique
     compte += 1
-    if compte == 5:
+    if compte > 4:
         canvas.delete(historique[1], historique[0])
         historique = []
-        compte = 0
+        compte = 1
 
-    
 
-canvas = tk.Canvas(background="Black", width=canvasWidth, height=canvasHeigth)
+canvas = tk.Canvas(background="White", width=canvasWidth, height=canvasHeigth)
 canvas.grid(column=0, row=0)
 button = tk.Button(text="Pause", command=timeoutMan)
 button.grid(column=0, row=1)
