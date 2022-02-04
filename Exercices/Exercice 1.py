@@ -16,7 +16,7 @@ def colorChange(event):
         x = event.x
         y = event.y
         if x <= 250 and x >= 200 and y <= 250 and y >= 200:
-            Canvas.itemconfigure(rectangleRed, fill=color)
+            Canvas.itemconfigure(rectangleRed, fill=color, outline="blue")
             if color == "Blue":
                 color = "Red"
             else:
