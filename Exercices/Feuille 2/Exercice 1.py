@@ -49,8 +49,10 @@ def stop():
 def rebond1(balle, bords):
     if bords == 1 or bords == 3:
         balle[1] = - balle[1]
+        cCanevas.itemconfigure(balle[0], fill="white")
     if bords == 0 or bords == 2:
         balle[2] = - balle[2]
+        cCanevas.itemconfigure(balle[0], fill="pink")
     return balle
 
 
