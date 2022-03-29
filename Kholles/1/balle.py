@@ -21,16 +21,40 @@ def creer_balle():
     cercle = canvas.create_oval((x-rayon, y-rayon),
                                 (x+rayon, y+rayon),
                                 fill="blue")
+    bordHaut = canvas.create_line(
+                                (0, 0),
+                                (LARGEUR, 0),
+                                width=10,
+                                fill="red")
+    bordBas = canvas.create_line(
+                                (0, HAUTEUR),
+                                (LARGEUR, HAUTEUR),
+                                width=10,
+                                fill="yellow")
+    bordDroit = canvas.create_line(
+                                (LARGEUR, 0),
+                                (LARGEUR, HAUTEUR),
+                                width=10,
+                                fill="green")
+    bordGauche = canvas.create_line(
+                                (0, 0),
+                                (0, HAUTEUR),
+                                width=11,
+                                fill="orange")
     return [cercle, dx, dy]
 
 
 def mouvement():
     """Déplace la balle et ré-appelle la fonction avec un compte-à-rebours"""
+    global compteur, status, after
     rebond()
     canvas.move(balle[0], balle[1], balle[2])
-    if compteur <= 5:
-        canvas.after(20, mouvement)
-    
+    after = canvas.after(10, mouvement)
+    status = True
+    if compteur >= 4:
+        print("arrêt")
+        canvas.after_cancel(after)
+        status = False
 
 
 def rebond():
@@ -45,12 +69,24 @@ def rebond():
         compteur += 1
 
 
+def clic(event):
+    global compteur, status, after
+    compteur = 0
+    if status is True:
+        canvas.after_cancel(after)
+        status = False
+    else:
+        after = canvas.after(10, mouvement)
+        status = True
+
+
 ######################
 # programme principal
 
 # création des widgets
 racine = tk.Tk()
 canvas = tk.Canvas(racine, bg="black", width=LARGEUR, height=HAUTEUR)
+canvas.bind("<Button-1>", clic)
 canvas.grid()
 
 # initialisation de la balle
